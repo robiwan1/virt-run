@@ -5,7 +5,9 @@ extract and create a VM with VM-arch.<br>
 VM-arch can be: RAR,ZIP,TAR,OVA,TGZ
 # 
 20200629,ha: added --clock option...<br>
-20201126,ha: if no disk found, create one
+20200813,ha: run RUNME if found in VM-dir<br>
+20201126,ha: if no disk found, create one<br>
+20201205,ha: add XML export of VM config
 # 
 USAGE: virt-run [VM-name|VM-dir|VM-arch]
 
