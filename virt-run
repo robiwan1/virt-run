@@ -8,7 +8,7 @@
 # 20201126,ha: if no disk found, create one
 # 20201205,ha: add XML export of VM config
 # USAGE: virt-run [VM-name|VM-dir|VM-arch]
-
+   touch /tmp/ISO
 # extract archive but do NOT overwrite
 if [ ! "$1" ];then
    echo VM-Archiv-File OR VM-name required 
@@ -59,7 +59,6 @@ else
    fi
 # create domain with 1vCPU and 1GBvMEM and DISK-file
 # https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli
-   touch /tmp/ISO
    if [ -f $VMD/$VMN.xml ];then
       virsh define $VMD/$VMN.xml
    else
