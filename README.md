@@ -10,4 +10,5 @@ VM-arch can be: RAR,ZIP,TAR,OVA,TGZ
 20201205,ha: add XML export of VM config
 # 
 USAGE: virt-run [VM-name|VM-dir|VM-arch]
-
+# 
+Create and run a VM just by creating an empty Directory (i.a. /data/VM/MyVM) and a Desktop Launcher with the command "/usr/bin/virt-run /data/VM/MyVM". Than doubleclick the launcher, and install any OS... 
