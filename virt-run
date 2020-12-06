@@ -43,7 +43,7 @@ else
 # check if DISK-file already used in a domain
    VDK=`find $VMD/$VMN \( -name *.vmdk -o -name *.qcow \) 2>/dev/null|tail -1`
 #   [ ! "$VDK" ] && echo "NO virtual Machine with name <$VMN>" && exit
-   [ ! "$VDK" ] && VDK=$VMD/$VMN/$VMN.vmdk && qemu-img create -f vmdk $VDK 2G
+   [ ! "$VDK" ] && VDK=$VMD/$VMN/$VMN.vmdk && qemu-img create -f vmdk $VDK 4G
    for DOM in `virsh list --all|awk 'FNR>2{print $2}'`;do
       for HDD in `virsh domblklist $DOM|awk 'FNR>2{print $2}'`;do
          [ "$HDD" = "$VDK" ] && echo Domain $DOM has DISK: $HDD && exit
@@ -63,7 +63,7 @@ else
    if [ -f $VMD/$VMN.xml ];then
       virsh define $VMD/$VMN.xml
    else
-      virt-install --name=$VMN --boot=${BOOT:=cdrom,hd} --vcpus=${VCPU:=1} --memory=${VMEM:=1024} --disk path=$VDK --cdrom /tmp/ISO --import --noreboot --noautoconsole --clock offset=localtime,hpet_present=yes
+      virt-install --name=$VMN --boot=${BOOT:=cdrom,hd} --vcpus=${VCPU:=1} --memory=${VMEM:=2048} --disk path=$VDK --cdrom /tmp/ISO --import --noreboot --noautoconsole --clock offset=localtime,hpet_present=yes
    fi
    $0 $VMN
 fi
