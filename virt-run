@@ -7,22 +7,29 @@
 # 20200813,ha: run RUNME if found in VM-dir
 # 20201126,ha: if no disk found, create one
 # 20201205,ha: add XML export of VM config
-# USAGE: virt-run [VM-name|VM-dir|VM-arch]
-   touch /tmp/ISO
-# extract archive but do NOT overwrite
+# 20220422,ha: add --osinfo detect=on,require=off
+# 20230409,ha: add default for NEW VMs -d|DEF
+# USAGE: virt-run [-d DSK:RAM:CPU] [VM-name|VM-dir|VM-arch]
+# default values for   4G  2G   1
+D1=`echo $2::|cut -f1 -d:`; D1=${D1:=4}G
+D2=`echo $2::|cut -f2 -d:`; D2=${D2:=2}; D2=`expr $D2 \* 1024`
+D3=`echo $2::|cut -f3 -d:`; D3=${D3:=1}
+[ "$1" = "-d" ] && shift 2
 if [ ! "$1" ];then
    echo VM-Archiv-File OR VM-name required 
    virsh list --all
    exit
 fi
 VMN=`basename $1|cut -f1 -d.`; VMD=`dirname $1`
-#echo "<$VMN><$VMD>";exit
+# echo "<$VMD><$VMN><$D1:$D2:$D3>";exit
+touch /tmp/ISO
 if [ "`virsh list --all|grep $VMN`" ];then
    /usr/bin/virsh start $VMN         # domain must be known to virsh
    [ $VMD != . ] && /usr/bin/virsh dumpxml $VMN >$VMD/$VMN/$VMN.xml
    /usr/bin/virt-viewer -w $VMN      # -w to wait until domain is running. 
 
 else
+# extract archive but do NOT overwrite
    if [ ! -d  $VMD/$VMN ];then
       if [ "`file $1|grep RAR\ archive`" ];then
          echo extracting RAR...
@@ -43,12 +50,13 @@ else
 # check if DISK-file already used in a domain
    VDK=`find $VMD/$VMN \( -name *.vmdk -o -name *.qcow \) 2>/dev/null|tail -1`
 #   [ ! "$VDK" ] && echo "NO virtual Machine with name <$VMN>" && exit
-   [ ! "$VDK" ] && VDK=$VMD/$VMN/$VMN.vmdk && qemu-img create -f vmdk $VDK 4G
+   [ ! "$VDK" ] && VDK=$VMD/$VMN/$VMN.vmdk && qemu-img create -f vmdk $VDK $D1
    for DOM in `virsh list --all|awk 'FNR>2{print $2}'`;do
       for HDD in `virsh domblklist $DOM|awk 'FNR>2{print $2}'`;do
          [ "$HDD" = "$VDK" ] && echo Domain $DOM has DISK: $HDD && exit
       done
    done
+#echo $VDK;exit
 # check values from VMX file
    VMX=`find $VMD/$VMN -name *.vmx 2>/dev/null|tail -1`
    if [ "$VMX" ];then
@@ -62,7 +70,7 @@ else
    if [ -f $VMD/$VMN.xml ];then
       virsh define $VMD/$VMN.xml
    else
-      virt-install --name=$VMN --boot=${BOOT:=cdrom,hd} --vcpus=${VCPU:=1} --memory=${VMEM:=2048} --disk path=$VDK --cdrom /tmp/ISO --import --noreboot --noautoconsole --clock offset=localtime,hpet_present=yes
+      virt-install --name=$VMN --boot=${BOOT:=cdrom,hd} --vcpus=${VCPU:=$D3} --memory=${VMEM:=$D2} --disk path=$VDK --cdrom /tmp/ISO --import --noreboot --noautoconsole --clock offset=localtime,hpet_present=yes --osinfo detect=on,require=off
    fi
    $0 $VMN
 fi
