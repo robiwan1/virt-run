@@ -15,8 +15,8 @@ USAGE: virt-run [-d DSK:RAM:CPU] [VM-name|VM-dir|VM-arch]<br>
 default values for   4G  2G   1
 # 
 Create and run a VM just by creating an empty Directory (i.a. /data/VM/MyVM) and a Desktop Launcher with the command "/usr/bin/virt-run /data/VM/MyVM". Than doubleclick the launcher, and install any OS... 
-Examples:
-create a simple VM called "Linux" with 4G Disk, 2G RAM and 1 CPU
-  mkdir /data/VM/Linux; virt-run /data/VM/Linux
-create a Windows 11 VM called "Win11" with 64G Disk, 4G RAM and 2 CPU ()
+Examples:<br>
+create a simple VM called "Linux" with 4G Disk, 2G RAM and 1 CPU<br>
+  mkdir /data/VM/Linux; virt-run /data/VM/Linux<br>
+create a Windows 11 VM called "Win11" with 64G Disk, 4G RAM and 2 CPU ()<br>
     mkdir /data/VM/Win11; virt-run -d 64:4:2 /data/VM/Win11
