@@ -10,6 +10,7 @@ VM-arch can be: RAR,ZIP,TAR,OVA,TGZ<br>
 20201205,ha: add XML export of VM config<br>
 20220422,ha: add --osinfo detect=on,require=off<br>
 20230409,ha: add default for NEW VMs -d|DEF<br>
+20240217,ha: recognize qcow2 as disk-format
 # 
 USAGE: virt-run [-d DSK:RAM:CPU] [VM-name|VM-dir|VM-arch]<br>
 default values for   4G  2G   1
